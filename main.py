@@ -212,6 +212,11 @@ def third_level(lifes_given, state):
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_a:
                     level += 1
             screen.fill(color)
+            # батут
+            batoot = pygame.image.load('images\батут.png')
+            batoot_place = batoot.get_rect(bottomleft=(0,800))
+            screen.blit(batoot,batoot_place)
+            
             '''Рисуем коробку, кота, шкалу'''
             cat = Cat(screen, x_cat, y_cat, lifes_given)
             cat.output()
