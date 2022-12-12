@@ -7,6 +7,7 @@ def first_level(lifes_given):
     game_over = False
     clock = pygame.time.Clock()
     fps = 120
+    dt = pygame.time.get_ticks()
     '''Задаем цвет и размер окна игры'''
     size = width, height = 1000, 800
     screen = pygame.display.set_mode(size)
@@ -14,8 +15,8 @@ def first_level(lifes_given):
 
     '''Начальное положение 1)стрелы 2)кота 3)уровня'''
     y, dy = 20, 5
-    x_cat, y_cat = 70, 450
-    vx_cat, vy_cat, stop = 0, 0, 1
+    x_cat, y_cat = 215, 450
+    vx_cat, vy_cat = 0, 0
     global level
     level = 1
 
@@ -27,7 +28,7 @@ def first_level(lifes_given):
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     y_click = y
                     print(y_click)  # 50-200
-                    vx_cat = y_click/20
+                    vx_cat = 9-y_click/25
                     vy_cat = -1.25
             screen.fill(green)
             # Шесть жизней
@@ -67,19 +68,17 @@ def first_level(lifes_given):
             screen.blit(scale, scale_space)
 
             '''Двигаем кота'''
-            x_cat += vx_cat*stop
-            y_cat -= vy_cat*stop
+            x_cat += vx_cat
+            y_cat -= vy_cat
 
             '''Определяем пересечение областей кота и коробки'''
             # Rect.contains(Rect)
             if box.rect.contains(cat.rect):
                 level += 1
-                stop *= 0
                 clock.tick(fps)
                 pygame.display.flip()
-            elif cat.rect.centerx == width or cat.rect.bottom == height:
+            elif cat.rect.centerx >= width or cat.rect.bottom == height:
                 lifes_given -= 1
-                stop *= 0
                 pygame.display.update()
                 first_level(lifes_given)
                 game_over = True
@@ -116,7 +115,7 @@ def second_level(lifes_given, state):
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     y_click = y
                     print(y_click)  # 50-200
-                    vx_cat = y_click/18
+                    vx_cat = 9-y_click/25
                     vy_cat = -1.25
             screen.fill(color)
             # Шесть жизней
@@ -156,17 +155,16 @@ def second_level(lifes_given, state):
             screen.blit(scale, scale_space)
 
             '''Двигаем кота'''
-            x_cat += vx_cat*stop
-            y_cat -= vy_cat*stop
+            x_cat += vx_cat
+            y_cat -= vy_cat
 
             # Определяем пересечение областей кота и коробки
             # Rect.contains(Rect)
-            if box.rect.contains(cat.rect):
+            if ((box.rect.centerx - cat.rect.centerx)**2 + (box.rect.centery - cat.rect.centery)**2)**0.5 < 50:
                 level += 1
-                stop *= 0
                 clock.tick(fps)
                 pygame.display.flip()
-            elif cat.rect.right == 1000 or cat.rect.bottom == 800:
+            elif cat.rect.right >= width or cat.rect.bottom == 800:
                 lifes_given -= 1
                 pygame.display.flip()
                 second_level(lifes_given, False)
