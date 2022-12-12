@@ -1,5 +1,5 @@
 import pygame
-from objects import Cat, Box, Heart_right, Heart_left
+from objects import Cat, Box, Box_Background, Heart_right, Heart_left
 
 def first_level(lifes_given):
     pygame.init()
@@ -60,9 +60,11 @@ def first_level(lifes_given):
             if y > 200 or y < 20:
                 dy *= -1
             '''Рисуем коробку, кота, шкалу'''
+            box_background = Box_Background(screen, 800, height-180, 375, 70)
+            box_background.output() 
             cat = Cat(screen, x_cat, y_cat, lifes_given)
             cat.output()
-            box = Box(screen, 800, height, 375, 250) #  x_box, y_box, width, height
+            box = Box(screen, 800, height, 375, 180) #  x_box, y_box, width, height
             box.output()
 
             scale = pygame.transform.scale(pygame.image.load('images\\scale.PNG'), (20, 150))
@@ -75,7 +77,8 @@ def first_level(lifes_given):
 
             '''Определяем пересечение областей кота и коробки'''
             # Rect.contains(Rect)
-            if box.rect.contains(cat.rect):
+            # if box.rect.contains(cat.rect):
+            if ((box.rect.centerx - cat.rect.centerx)**2 + (box.rect.centery - cat.rect.centery)**2)**0.5 < 50:
                 level += 1
                 clock.tick(fps)
                 pygame.display.flip()
@@ -150,9 +153,11 @@ def second_level(lifes_given, state):
             if y > 200 or y < 20:
                 dy *= -1
             '''Рисуем коробку, кота, шкалу'''
+            box_background = Box_Background(screen, 800, height-144, 300, 56)
+            box_background.output() 
             cat = Cat(screen, x_cat, y_cat, lifes_given)
             cat.output()
-            box = Box(screen, 800, height, 300, 200)
+            box = Box(screen, 800, height, 300, 144)
             box.output()
 
             scale = pygame.transform.scale(pygame.image.load('images\\scale.PNG'), (20, 150))
@@ -165,7 +170,7 @@ def second_level(lifes_given, state):
 
             # Определяем пересечение областей кота и коробки
             # Rect.contains(Rect)
-            if ((box.rect.centerx - cat.rect.centerx)**2 + (box.rect.centery - cat.rect.centery)**2)**0.5 < 50:
+            if ((box.rect.centerx - cat.rect.centerx)**2 + (box.rect.centery - cat.rect.centery)**2)**0.5 < 60:
                 level += 1
                 clock.tick(fps)
                 pygame.display.flip()
@@ -208,7 +213,7 @@ def third_level(lifes_given, state):
                     y_click = y
                     print(y_click)  # 50-200
                     vx_cat = 10-y_click/25
-                    vy_cat = -4
+                    vy_cat = -4.5
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_a:
                     level += 1
             screen.fill(color)
