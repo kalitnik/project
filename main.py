@@ -1,14 +1,12 @@
 import pygame
 from objects import Cat, Box, Heart_right, Heart_left
 
-
 def first_level(lifes_given):
     pygame.init()
-
     '''База'''
     game_over = False
     clock = pygame.time.Clock()
-    fps = 60
+    fps = 120
     '''Задаем цвет и размер окна игры'''
     size = width, height = 1000, 800
     screen = pygame.display.set_mode(size)
@@ -79,11 +77,12 @@ def first_level(lifes_given):
                 stop *= 0
                 clock.tick(fps)
                 pygame.display.flip()
-                game_over = True
-            elif cat.rect.right == width or cat.rect.bottom == height:
+            elif cat.rect.centerx == width or cat.rect.bottom == height:
                 lifes_given -= 1
-                pygame.display.flip()
+                stop *= 0
+                pygame.display.update()
                 first_level(lifes_given)
+                game_over = True
             else:
                 clock.tick(fps)
                 pygame.display.flip()
@@ -94,7 +93,6 @@ def first_level(lifes_given):
 
 
 def second_level(lifes_given, state):
-    pygame.init()
     '''База'''
     game_over = state
     clock = pygame.time.Clock()
@@ -118,7 +116,7 @@ def second_level(lifes_given, state):
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     y_click = y
                     print(y_click)  # 50-200
-                    vx_cat = y_click/20
+                    vx_cat = y_click/18
                     vy_cat = -1.25
             screen.fill(color)
             # Шесть жизней
@@ -158,8 +156,6 @@ def second_level(lifes_given, state):
             screen.blit(scale, scale_space)
 
             '''Двигаем кота'''
-            # if cat.rect.centerx == width:
-            #     vx_cat *= -1
             x_cat += vx_cat*stop
             y_cat -= vy_cat*stop
 
@@ -170,27 +166,25 @@ def second_level(lifes_given, state):
                 stop *= 0
                 clock.tick(fps)
                 pygame.display.flip()
-                game_over = True
-            elif cat.rect.right == width or cat.rect.bottom == height:
+            elif cat.rect.right == 1000 or cat.rect.bottom == 800:
                 lifes_given -= 1
                 pygame.display.flip()
                 second_level(lifes_given, False)
+                game_over = True
             else:
                 clock.tick(fps)
                 pygame.display.flip()
         else:
             game_over = True
-            pygame.quit()
             break
     pass
 
 
 first_level(6)
-pygame.quit()
 if level == 2:
     state = False
 else:
     state = True
-
 second_level(6, state)
+pygame.quit()
 print('finish')
