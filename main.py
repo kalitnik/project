@@ -207,11 +207,17 @@ def third_level(lifes_given, state):
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     y_click = y
                     print(y_click)  # 50-200
-                    vx_cat = 9-y_click/25
-                    vy_cat = -1.25
+                    vx_cat = 10-y_click/25
+                    vy_cat = -4
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_a:
                     level += 1
             screen.fill(color)
+            '''Рисуем коробку, кота, шкалу'''
+            cat = Cat(screen, x_cat, y_cat, lifes_given)
+            cat.output()
+            box = Box(screen, 800, 200, 375, 250)
+            box.output()
+
             # Шесть жизней
             x_heart, y_heart = 945, 5
             if lifes_given >= 1:
@@ -238,18 +244,13 @@ def third_level(lifes_given, state):
             y += dy
             if y > 200 or y < 20:
                 dy *= -1
-            '''Рисуем коробку, кота, шкалу'''
-            cat = Cat(screen, x_cat, y_cat, lifes_given)
-            cat.output()
-            box = Box(screen, 800, 200, 375, 250)
-            box.output()
 
             scale = pygame.transform.scale(pygame.image.load('images\\scale.PNG'), (20, 150))
             scale_space = scale.get_rect(bottomright=(65, 200))
             screen.blit(scale, scale_space)
 
             '''Двигаем кота'''
-            if cat.rect.bottom == 800:
+            if cat.rect.centery >= 700:
                 vy_cat *= -1
             x_cat += vx_cat
             y_cat -= vy_cat
@@ -259,7 +260,7 @@ def third_level(lifes_given, state):
                 level += 1
                 clock.tick(fps)
                 pygame.display.flip()
-            elif cat.rect.right >= width:
+            elif cat.rect.right >= width or cat.rect.centery <= 100:
                 lifes_given -= 1
                 pygame.display.flip()
                 third_level(lifes_given, False)
