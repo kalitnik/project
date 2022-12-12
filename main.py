@@ -1,5 +1,5 @@
 import pygame
-from objects import Cat, Box, Box_Background, Heart_right, Heart_left
+from objects import Cat, Box, Box_Background, Box_Upside_down, Box_Upside_down_Background, Heart_right, Heart_left
 
 def first_level(lifes_given):
     pygame.init()
@@ -223,9 +223,11 @@ def third_level(lifes_given, state):
             screen.blit(batoot,batoot_place)
             
             '''Рисуем коробку, кота, шкалу'''
+            box = Box_Upside_down_Background(screen, 820, 250, 375, 80)
+            box.output()
             cat = Cat(screen, x_cat, y_cat, lifes_given)
             cat.output()
-            box = Box(screen, 800, 200, 375, 250)
+            box = Box_Upside_down(screen, 820, 170, 375, 170)
             box.output()
 
             # Шесть жизней
@@ -283,6 +285,100 @@ def third_level(lifes_given, state):
             break
     pass
 
+def fourth_level(lifes_given, state):
+    pygame.init()
+    '''База'''
+    game_over = state
+    clock = pygame.time.Clock()
+    fps = 120
+    dt = pygame.time.get_ticks()
+    '''Задаем цвет и размер окна игры'''
+    size = width, height = 1000, 800
+    screen = pygame.display.set_mode(size)
+    green = 150, 255, 150
+
+    '''Начальное положение 1)стрелы 2)кота 3)уровня'''
+    y, dy = 20, 5
+    x_cat, y_cat = 550, 210
+    vy_cat = 0
+    x_box, dx_box = 800, 10
+    global level
+    level = 4
+
+    while not game_over:
+        if lifes_given != 0 and level == 4:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    game_over = True
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    y_click = y
+                    print(y_click)  # 50-200
+                    vy_cat = -(9-y_click/25)
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_a:
+                    level += 1
+            screen.fill(green)
+            # Шесть жизней
+            x_heart, y_heart = 945, 5
+            if lifes_given >= 1:
+                heart1_r = Heart_right(screen, x_heart, y_heart)
+                heart1_r.output()
+            if lifes_given > 1:
+                heart1_l = Heart_left(screen, x_heart-25, y_heart)
+                heart1_l.output()
+            if lifes_given > 2:
+                heart2_r = Heart_right(screen, x_heart-50, y_heart)
+                heart2_r.output()
+            if lifes_given > 3:
+                heart2_l = Heart_left(screen, x_heart-75, y_heart)
+                heart2_l.output()
+            if lifes_given > 4:
+                heart2_r = Heart_right(screen, x_heart-100, y_heart)
+                heart2_r.output()
+            if lifes_given == 6:
+                heart2_l = Heart_left(screen, x_heart-125, y_heart)
+                heart2_l.output()
+
+            '''Рисуем и двигаем стрелку'''
+            pygame.draw.polygon(screen, (255, 0, 255), [(20, y+20), (40, y+10), (20, y), (20, y+20)])
+            y += dy
+            if y > 200 or y < 20:
+                dy *= -1
+            '''Рисуем коробку, кота, шкалу, двигаем коробку'''
+            box_background = Box_Background(screen, x_box, height-180, 375, 70)
+            box_background.output() 
+            cat = Cat(screen, x_cat, y_cat, lifes_given)
+            cat.output()
+            box = Box(screen, x_box, height, 375, 180) #  x_box, y_box, width, height
+            box.output()
+            x_box -= dx_box
+            if x_box < 0 or x_box > 1000:
+                dx_box *= -1
+
+            scale = pygame.transform.scale(pygame.image.load('images\\scale.PNG'), (20, 150))
+            scale_space = scale.get_rect(bottomright=(65, 200))
+            screen.blit(scale, scale_space)
+
+            '''Двигаем кота'''
+            y_cat -= vy_cat
+
+            '''Определяем пересечение областей кота и коробки'''
+            if ((box.rect.centerx - cat.rect.centerx)**2 + (box.rect.centery - cat.rect.centery)**2)**0.5 < 60:
+                level += 1
+                clock.tick(fps)
+                pygame.display.flip()
+            elif cat.rect.bottom >= height:
+                lifes_given -= 1
+                pygame.display.update()
+                fourth_level(lifes_given, False)
+                game_over = True
+            else:
+                clock.tick(fps)
+                pygame.display.flip()
+        else:
+            game_over = True
+            break
+    pass
+
 first_level(6)
 
 if level == 2:
@@ -296,6 +392,12 @@ if level == 3:
 else:
     state = True
 third_level(6, state)  
+
+if level == 4:
+    state = False
+else:
+    state = True
+fourth_level(6, state)  
 
 pygame.quit()
 print('finish')
