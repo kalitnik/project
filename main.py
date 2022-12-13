@@ -11,7 +11,7 @@ def first_level(lifes_given):
     '''Задаем цвет и размер окна игры'''
     size = width, height = 1000, 800
     screen = pygame.display.set_mode(size)
-    green = 150, 255, 150
+    green = 170, 250, 170
 
     '''Начальное положение 1)стрелы 2)кота 3)уровня'''
     y, dy = 20, 5
@@ -33,6 +33,11 @@ def first_level(lifes_given):
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_a:
                     level += 1
             screen.fill(green)
+            f1 = pygame.font.Font(None, 36)
+            text1 = f1.render('Рекоммендансьён: зеленая зона', 1, (0, 150, 100))
+            text2 = f1.render('Впрочем, учатся на ошибках:)', 1, (0, 150, 100))
+            screen.blit(text1, (10, 500))
+            screen.blit(text2, (10, 530))
             # Шесть жизней
             x_heart, y_heart = 945, 5
             if lifes_given >= 1:
@@ -104,7 +109,7 @@ def second_level(lifes_given, state):
     '''Задаем цвет и размер окна игры'''
     size = width, height = 1000, 800
     screen = pygame.display.set_mode(size)
-    color = 255, 150, 150
+    pink = 255, 190, 170
 
     '''Начальное положение 1)стрелы 2)кота 3)уровня'''
     y, dy = 20, 5
@@ -125,7 +130,12 @@ def second_level(lifes_given, state):
                     vy_cat = -1.25
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_a:
                     level += 1
-            screen.fill(color)
+            screen.fill(pink)
+            f1 = pygame.font.Font(None, 36)
+            text1 = f1.render('Говорят, у кошки есть 9 жизней', 1, (210, 50, 50))
+            text2 = f1.render('Тут однако 6. Прямо как номер одного общежития', 1, (210, 50, 50))
+            screen.blit(text1, (300, 200))
+            screen.blit(text2, (300, 230))
             # Шесть жизней
             x_heart, y_heart = 945, 5
             if lifes_given >= 1:
@@ -195,7 +205,7 @@ def third_level(lifes_given, state):
     '''Задаем цвет и размер окна игры'''
     size = width, height = 1000, 800
     screen = pygame.display.set_mode(size)
-    color = 150, 150, 255
+    blue = 150, 150, 255
 
     '''Начальное положение 1)стрелы 2)кота 3)уровня'''
     y, dy = 20, 5
@@ -216,7 +226,11 @@ def third_level(lifes_given, state):
                     vy_cat = -4.5
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_a:
                     level += 1
-            screen.fill(color)
+            screen.fill(blue)
+
+            f1 = pygame.font.Font(None, 36)
+            text1 = f1.render('Отзеркаливаемся от батута', 1, (40, 40, 120))
+            screen.blit(text1, (200, 200))
             # батут
             batoot = pygame.image.load('images\батут.png')
             batoot_place = batoot.get_rect(bottomleft=(0,800))
@@ -291,11 +305,10 @@ def fourth_level(lifes_given, state):
     game_over = state
     clock = pygame.time.Clock()
     fps = 120
-    dt = pygame.time.get_ticks()
     '''Задаем цвет и размер окна игры'''
     size = width, height = 1000, 800
     screen = pygame.display.set_mode(size)
-    green = 150, 255, 150
+    lil = 230, 160, 255
 
     '''Начальное положение 1)стрелы 2)кота 3)уровня'''
     y, dy = 20, 5
@@ -316,7 +329,11 @@ def fourth_level(lifes_given, state):
                     vy_cat = -(9-y_click/25)
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_a:
                     level += 1
-            screen.fill(green)
+            screen.fill(lil)
+
+            f1 = pygame.font.Font(None, 36)
+            text1 = f1.render('Самое время для многоходовочки', 1, (200, 80, 255))
+            screen.blit(text1, (550, 500))
             # Шесть жизней
             x_heart, y_heart = 945, 5
             if lifes_given >= 1:
@@ -379,6 +396,24 @@ def fourth_level(lifes_given, state):
             break
     pass
 
+def result(level):
+    pygame.init()
+    game_over = False
+    size = 1000, 800
+    screen = pygame.display.set_mode(size)
+
+    while not game_over:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                game_over = True
+        if level == 5:
+            screen.fill([255,255,255])
+            picture_of_cat = pygame.image.load('images\won.png')
+            place_of_cat = picture_of_cat.get_rect()
+            screen.blit(picture_of_cat, place_of_cat)
+        pygame.time.wait(1000)
+        game_over = True
+
 first_level(6)
 
 if level == 2:
@@ -399,5 +434,6 @@ else:
     state = True
 fourth_level(6, state)  
 
+result(level)
 pygame.quit()
 print('finish')
