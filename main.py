@@ -408,12 +408,33 @@ def result(level):
                 game_over = True
         if level == 5:
             screen.fill([255,255,255])
-            picture_of_cat = pygame.image.load('images\won.png')
-            place_of_cat = picture_of_cat.get_rect()
-            screen.blit(picture_of_cat, place_of_cat)
-        pygame.time.wait(1000)
-        game_over = True
 
+            f1 = pygame.font.Font(None, 36)
+            text1 = f1.render('Congrats!', 1, (0, 0, 0))
+            text2 = f1.render('You won!', 1, (0, 0, 0))
+            screen.blit(text1, (500, 30))
+            screen.blit(text2, (500, 700))
+
+            picture_of_cat = pygame.image.load('images\won.png')
+            place_of_cat = picture_of_cat.get_rect(center=[500,400])
+            screen.blit(picture_of_cat, place_of_cat)
+            pygame.display.update()
+            pygame.time.delay(6000)
+        else:
+            screen.fill([255,255,255])
+            f1 = pygame.font.Font(None, 36)
+            text1 = f1.render('You lose :(', 1, (0, 0, 0))
+            text2 = f1.render('Всё получится! Можешь попробовать снова', 1, (0, 0, 0))
+            screen.blit(text1, (500, 30))
+            screen.blit(text2, (220, 750))
+
+            picture_of_cat = pygame.image.load('images\lose.png')
+            place_of_cat = picture_of_cat.get_rect(center=[500,400])
+            screen.blit(picture_of_cat, place_of_cat)
+            pygame.display.update()
+            pygame.time.delay(6000)
+        game_over = True
+        break
 first_level(6)
 
 if level == 2:
